@@ -1,0 +1,163 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<link rel="stylesheet" href="/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.min.css">
+<script src="/js/jquery.1.10.2.min.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-9 text-center tmargin20">
+            <img src="/images/Juta-logo-small.png" class="img-responsive" style="margin: 0 auto; width: 130px;">
+            <h2 style="margin-bottom: 6px !important;">{{jurisdiction.anname}} Court</h2>
+            <a href="{{path('lexfutures_leaderboard', {'id': jurisdiction.id})}}"><small>leader board</small></a>
+        </div>
+        <div class="col-xs-12 col-md-3 text-center">
+            <img src="/images/400px-uct_alt_ntp.png" class="img-responsive">
+            The LexFutures Court Prediction League is presented in partnership with UCT Law @ Work.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>{{judge.justicetitle.name}} {{judge.name}} Bio</h4>
+            <hr>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12 f-black">
+            {% if judge.biopic is defined and judge.biopic is not null %}
+            <img style='float:left; width:300px; margin-right:10px; margin-bottom: 10px;' src="/profiles/{{judge.biopic.filename}}" />
+            {% endif %}
+            <h4 style="margin-top: 0px !important;">Judge bio field 1</h4>
+            <p>
+                {{ judge.profileLine1 }}
+            </p>
+            <h4 class="tmargin10">Judge bio field 2</h4>
+            <p>
+                {{ judge.profileLine2 }}
+            </p>
+            <h4 class="tmargin10">Judge bio field 3</h4>
+            <p>
+                {{ judge.profileLine3 }}
+            </p>
+        </div>
+        <div class="col-xs-12">
+            <br/>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    
+    $("body").on("click", ".upheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('1');
+        
+        $("#upheld_"+id).html('<i class="fa fa-check" aria-hidden="true"></i>');
+        $("#notupheld_"+id).html('');
+    });
+    
+    $("body").on("click", ".notupheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('0');
+        
+        $("#upheld_"+id).html('');
+        $("#notupheld_"+id).html('<i class="fa fa-times" aria-hidden="true"></i>');
+    });
+});
+
+function partify(string, seperator, index)
+{
+    
+    var parts = string.split(seperator);
+    
+    return parts[index];
+    
+}
+</script>
+{% endblock maincontent %}
+
+{#
+<link rel="stylesheet" href="/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.min.css">
+<style media="screen" type="text/css">
+.clickable {cursor: pointer;}
+
+</style>
+<script src="/js/jquery.1.10.2.min.js"></script>
+<h1>{{prediction.courtcase.jurisdiction.anname}} Court</h1>
+
+<!-- Upcoming Cases -->
+<h4>{{prediction.courtcase.name}}</h4>
+<form method="POST" id="predictionForm" name="predictionForm">
+<table width="100%" cellpadding="10" cellspacing="10" border="1">    
+{% for predictionJudge in prediction.predictionJudges %}
+<input type="hidden" name="justice_{{predictionJudge.judge.id}}" id="justice_{{predictionJudge.judge.id}}" value="{% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}{% if predictionJudge.appealUpheld %}1{% else %}0{% endif %}{% endif %}">
+<tr>
+    <td>
+        {{predictionJudge.judge.justiceTitle.name}} {{predictionJudge.judge.name}}
+    </td>
+    <td class="clickable upheld" id="upheld_{{predictionJudge.judge.id}}">
+        {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+        {% if predictionJudge.appealUpheld %}
+        <i class="fa fa-check" aria-hidden="true"></i>
+        {% endif %}
+        {% endif %}
+    </td>
+    <td class="clickable notupheld" id="notupheld_{{predictionJudge.judge.id}}">
+        {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+        {% if not predictionJudge.appealUpheld %}
+        <i class="fa fa-times" aria-hidden="true"></i>
+        {% endif %}
+        {% endif %}
+    </td>
+    <td>
+        Judge Bio
+    </td>
+    <td>
+        Crowd Prediction
+    </td>
+</tr>
+{% endfor %}
+</table>
+<input type="submit" value="Predict">
+</form>
+<script>
+$(document).ready(function() {
+    
+    $("body").on("click", ".upheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('1');
+        
+        $("#upheld_"+id).html('<i class="fa fa-check" aria-hidden="true"></i>');
+        $("#notupheld_"+id).html('');
+    });
+    
+    $("body").on("click", ".notupheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('0');
+        
+        $("#upheld_"+id).html('');
+        $("#notupheld_"+id).html('<i class="fa fa-times" aria-hidden="true"></i>');
+    });
+});
+
+function partify(string, seperator, index)
+{
+    
+    var parts = string.split(seperator);
+    
+    return parts[index];
+    
+}
+</script>
+#}

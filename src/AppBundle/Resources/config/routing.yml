@@ -1,0 +1,28 @@
+lexfutures_login_redirect:
+    path: /lex/redirect
+    defaults: {_controller: AppBundle:Default:redirect}
+    
+lexfutures_dashboard:
+    path: /lex/dashboard
+    defaults: {_controller: AppBundle:Default:dashboard}
+    
+lexfutures_cases:
+    path: /lex/cases/{id}
+    defaults: {_controller: AppBundle:Cases:list}
+    
+lexfutures_edit_prediction:
+    path: /lex/prediction/{id}
+    defaults: {_controller: AppBundle:Cases:prediction}
+    
+lexfutures_admin_dashboard:
+    path: /admin/dashboard
+    defaults: {_controller: AppBundle:Admin:dashboard}
+
+lexfutures_admin_user_add:
+    path: /admin/user/add
+    defaults: {_controller: AppBundle:Admin:userAdd}
+    
+lexfutures_admin_user_list:
+    path: /admin/user/list
+    defaults: {_controller: AppBundle:Admin:userList}
+    

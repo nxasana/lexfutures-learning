@@ -1,0 +1,336 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<link rel="stylesheet" href="/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.min.css">
+<script src="/js/jquery.1.10.2.min.js"></script>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="loginNotification">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Please Login</h4>
+      </div>
+      <div class="modal-body">
+          <p>You must be logged in to submit a prediction. Click here to <a style="color: blue;" href="{{path('fos_user_security_login')}}">login</a> or <a style="color: blue;" href="{{path('fantasy_league')}}">register</a> if you have not logged in before</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="dismissModal" data-dismiss="modal">OK</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        {# <div class="col-xs-12 pall10 f-black text-center f-black">
+            <p>
+                The LexFutures Court Prediction League is presented in <br/>partnership with UCT Law @ Work &amp; Juta Law.
+
+            </p>
+        </div>
+        <div class="col-xs-12 col-sm-6 tmargin20 f-black text-center">
+
+            <img src="/images/Juta-logo-small.png" class="img-responsive sponsor-logo">
+            
+            <p class="tmargin20"><a href="https://twitter.com/JutaLaw" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i> @JutaLaw</a></p>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 tmargin20 f-black text-center ">
+
+            <img src="/images/uctlogo.png" class="img-responsive sponsor-logo">
+            
+            <p class="tmargin20"><a href="https://twitter.com/UCT_Law_at_work" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i>@UCTLaw@Work</a></p>
+            
+        </div> #}
+        <div class="row">
+            <div class="col-xs-12 text-center f-black">
+                <h2 style="margin-bottom: 6px !important;">{{jurisdiction.anname}} {{jurisdiction.court}}</h2>
+                {#<a href="{{path('lexfutures_leaderboard', {'id': jurisdiction.id})}}"><small>leader board</small></a>#}
+                <h3 style="margin-top: 12px !important;">{{prediction.courtcase.name}}</h3>
+                {% for note in prediction.courtcase.notes %}
+                <p>{{note.note}}</p>    
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    {#
+    <div class="row">
+        <div class="col-xs-12 col-md-9 text-center tmargin20">
+            <img src="/images/Juta-logo-small.png" class="img-responsive" style="margin: 0 auto; width: 130px;">
+            <h2 style="margin-bottom: 6px !important;">{{jurisdiction.anname}} Court</h2>
+            <a href="{{path('lexfutures_leaderboard', {'id': jurisdiction.id})}}"><small>leader board</small></a>
+        </div>
+        <div class="col-xs-12 col-md-3 text-center">
+            <img src="/images/400px-uct_alt_ntp.png" class="img-responsive">
+            The LexFutures Court Prediction League is presented in partnership with UCT Law @ Work.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>{{prediction.courtcase.name}}</h4>
+        </div>
+    </div>
+    #}
+    <div class="row">
+        <div class="col-lg-12">
+        {% for flashMessage in errors %}
+            <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-times scred"></i> ERROR!</strong> {{ flashMessage }}</div>
+        {% endfor %}    
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">    
+            <form method="POST" id="predictionForm" name="predictionForm">
+            <table class="table table-striped table-condensed"> 
+                <thead>
+                    <tr style="border-color: red !important;">
+                        <th style="border-right-color: #fff !important; border-left-color: #fff !important;"></th>                        
+                        <th colspan="3" style="border-right-color: #fff !important;">Click to enter your prediction below</th>
+                    </tr>
+                    <tr>                        
+                        <th>Judges</th>
+                        <th>Uphold</th>
+                        <th>Dismiss</th>
+                        <th>Judges Biography</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for predictionJudge in prediction.predictionJudgesOrdered %}
+                {% if predictionJudge.judge.isRecused(prediction.courtcase.id) %}{% else %}
+                <input class="justicePrediction" type="hidden" name="justice_{{predictionJudge.judge.id}}" id="justice_{{predictionJudge.judge.id}}" value="{% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}{% if predictionJudge.appealUpheld %}1{% else %}0{% endif %}{% endif %}">    
+                {% endif %}
+                {% if predictionJudge.judge.isRecused(prediction.courtcase.id) %}
+                <tr class="recused">
+                    <td>
+                        {{predictionJudge.judge.justiceTitle.name}} {{predictionJudge.judge.name}} (<span style="color: red;"><i><strong>recused</strong></i></span>)
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        {% if judge.profileLine1 is defined and judge.profileLine1 is not null and judge.profileLine1 != '' %}
+                        <a class="visible" href="{{judge.profileLine1|raw}}" target="_blank">View Biography</a>
+                        {% endif %}
+                    </td>
+                </tr>    
+                {% else %}
+                <tr>
+                    <td>
+                        {{predictionJudge.judge.justiceTitle.name}} {{predictionJudge.judge.name}}
+                    </td>
+                    <td class="clickable upheld" id="upheld_{{predictionJudge.judge.id}}">
+                        {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+                        {% if predictionJudge.appealUpheld %}
+                        <i class="fa fa-check green-i" aria-hidden="true"></i>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="clickable notupheld" id="notupheld_{{predictionJudge.judge.id}}">
+                        {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+                        {% if not predictionJudge.appealUpheld %}
+                        <i class="fa fa-times red-i" aria-hidden="true"></i>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if predictionJudge.judge.profileLine1 is defined and predictionJudge.judge.profileLine1 is not null and predictionJudge.judge.profileLine1 != '' %}
+                        <a class="visible" href="{{predictionJudge.judge.profileLine1|raw}}" target="_blank">View Biography</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if app.user %}
+            <input type="submit" value="save Prediction" class="btn btn-lrg btn-primary">
+            {% else %}
+            <input type="button" value="save Prediction" class="btn btn-lrg btn-primary" id="submitPredictionNoAuth">    
+            {% endif %}
+            </form>
+            <p style="color: #000;" class="tmargin10">
+                You can edit your prediction at any time before the judgment is handed down.
+            </p>
+        </div>
+        <div class="col-xs-12">
+            <br/>
+        </div>
+    </div>
+</div>
+<script>
+
+$(document).ready(function() {
+    
+    {% if app.user is defined and app.user is not null %}
+        
+    {% else %}
+        $('#loginNotification').modal();
+    {% endif %}
+    
+    
+    $("body").on("click", "#submitPredictionNoAuth", function (e) {
+        $('#loginNotification').modal();
+    });
+    
+    $("body").on("click", ".upheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('1');
+        
+        $("#upheld_"+id).html('<i class="fa fa-check green-i" aria-hidden="true"></i>');
+        $("#notupheld_"+id).html('');
+    });
+    
+    $("body").on("click", ".notupheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('0');
+        
+        $("#upheld_"+id).html('');
+        $("#notupheld_"+id).html('<i class="fa fa-times red-i" aria-hidden="true"></i>');
+    });
+    
+    
+});
+
+function checkinput()
+{
+    
+    var checks = 0;
+    var totals = 0;
+    
+    $("#predictionForm input[type=hidden]").each(function() {
+        
+        if (this.value === "0" || this.value === "1" || this.value === 0 || this.value === 1) {
+            
+            checks = checks + 1;
+            
+        }
+        
+        totals = totals + 1;
+        
+    });
+    
+    //console.log(checks+"|"+totals);
+    
+    if (checks > 0 && checks < totals) {
+        
+        
+        
+        return true;
+        
+    }
+    
+    return false;
+    
+}
+
+window.onbeforeunload = function() {
+    
+    if (checkinput()) {
+    
+        return "You haven't saved your prediction, are you sure you want to leave the page?";
+    
+    }
+};
+
+function partify(string, seperator, index)
+{
+    
+    var parts = string.split(seperator);
+    
+    return parts[index];
+    
+}
+</script>
+{% endblock maincontent %}
+
+{#
+<link rel="stylesheet" href="/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.min.css">
+<style media="screen" type="text/css">
+.clickable {cursor: pointer;}
+
+</style>
+<script src="/js/jquery.1.10.2.min.js"></script>
+<h1>{{prediction.courtcase.jurisdiction.anname}} Court</h1>
+
+<!-- Upcoming Cases -->
+<h4>{{prediction.courtcase.name}}</h4>
+<form method="POST" id="predictionForm" name="predictionForm">
+<table width="100%" cellpadding="10" cellspacing="10" border="1">    
+{% for predictionJudge in prediction.predictionJudges %}
+<input type="hidden" name="justice_{{predictionJudge.judge.id}}" id="justice_{{predictionJudge.judge.id}}" value="{% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}{% if predictionJudge.appealUpheld %}1{% else %}0{% endif %}{% endif %}">
+<tr>
+    <td>
+        {{predictionJudge.judge.justiceTitle.name}} {{predictionJudge.judge.name}}
+    </td>
+    <td class="clickable upheld" id="upheld_{{predictionJudge.judge.id}}">
+        {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+        {% if predictionJudge.appealUpheld %}
+        <i class="fa fa-check" aria-hidden="true"></i>
+        {% endif %}
+        {% endif %}
+    </td>
+    <td class="clickable notupheld" id="notupheld_{{predictionJudge.judge.id}}">
+        {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+        {% if not predictionJudge.appealUpheld %}
+        <i class="fa fa-times" aria-hidden="true"></i>
+        {% endif %}
+        {% endif %}
+    </td>
+    <td>
+        Judge Bio
+    </td>
+    <td>
+        Crowd Prediction
+    </td>
+</tr>
+{% endfor %}
+</table>
+<input type="submit" value="Predict">
+</form>
+<script>
+$(document).ready(function() {
+    
+    $("body").on("click", ".upheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('1');
+        
+        $("#upheld_"+id).html('<i class="fa fa-check" aria-hidden="true"></i>');
+        $("#notupheld_"+id).html('');
+    });
+    
+    $("body").on("click", ".notupheld.clickable", function (e) {
+        
+        var ident = $(this).attr("id");
+        var id = partify(ident, "_", 1);
+        
+        $("#justice_"+id).val('0');
+        
+        $("#upheld_"+id).html('');
+        $("#notupheld_"+id).html('<i class="fa fa-times" aria-hidden="true"></i>');
+    });
+});
+
+function partify(string, seperator, index)
+{
+    
+    var parts = string.split(seperator);
+    
+    return parts[index];
+    
+}
+</script>
+#}

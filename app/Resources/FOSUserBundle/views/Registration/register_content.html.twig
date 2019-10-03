@@ -1,0 +1,104 @@
+
+<div class="row">
+    <div class="col-xs-12 f-black">
+        
+        {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register form-horizontal', 'role': 'form'}}) }}
+        <p class="text-center">
+            <strong>Sign up to the LexFutures Fantasy Court Prediction Competition</strong>
+        </p>
+        <div class="form-group">
+            {{ form_errors(form.first_name) }}
+            <label for="firstName" class="col-sm-3 control-label">{{ form_label(form.first_name) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.first_name, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_errors(form.last_name) }}
+            <label for="lastName" class="col-sm-3 control-label">{{ form_label(form.last_name) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.last_name, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_errors(form.email) }}
+            <label for="email" class="col-sm-3 control-label">{{ form_label(form.email) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.email, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form_errors(form.plainPassword.first) }}
+            <label for="email" class="col-sm-3 control-label">{{ form_label(form.plainPassword.first) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>    
+
+        <div class="form-group">
+            {{ form_errors(form.plainPassword.second) }}
+            <label for="email" class="col-sm-3 control-label">{{ form_label(form.plainPassword.second) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>   
+        {#
+        <div class="form-group">
+            {{ form_errors(form.educationLevel) }}
+            <label for="educationLevel" class="col-sm-3 control-label">{{ form_label(form.educationLevel) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.educationLevel, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>
+        #}
+        <div class="form-group">
+            {{ form_errors(form.occupation) }}
+            <label for="occupation" class="col-sm-3 control-label">{{ form_label(form.occupation) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.occupation, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>  
+            
+        <div class="form-group">
+            {{ form_errors(form.country) }}
+            <label for="occupation" class="col-sm-3 control-label">{{ form_label(form.country) }}</label>
+            <div class="col-sm-9">
+                {{ form_widget(form.country, { 'attr': {'class': 'form-control'} }) }}                 
+            </div>
+        </div>  
+
+        <div class="form-group">
+            {{ form_errors(form.acceptTerms) }}
+            <label for="email" class="col-sm-3 control-label"></label>
+            <div class="col-sm-9 text-left">
+                <div class="checkbox">
+                    <label>
+                    {{ form_widget(form.acceptTerms) }}  
+                    I agree to the 
+                    </label>
+                    <a href="{{path('terms')}}" class="visible" target="_blank">Terms and Conditions</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-9 col-sm-offset-3">
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-9 col-sm-offset-3 text-center padding20" >
+                {#<img src="/images/Untitled-1.png" class="img-responsive center-block" alt="logo">#}
+                <img src="/images/header-logo.png" class="img-responsive center-block" alt="LexFutures Logo">
+                <br/>
+                A LexEikon company
+            </div>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+            
+</div>

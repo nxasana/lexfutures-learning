@@ -1,0 +1,84 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - Student Hub Admin{% endblock %}
+
+{% block stylesheets %}          
+    {{ parent() }}
+    <!-- DataTables CSS -->
+    <link href="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+    <style media="screen" type="text/css">
+.clickable {cursor: pointer;}
+
+</style>
+{% endblock %}
+
+{% block pagecontent %}    
+    <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{jurisdiction.name}} <a href="{{path('lexfutures_admin_jurisdiction_cases', {'id': jurisdiction.id})}}"><img src="/images/back-btn.jpg" style="height: 40px;"></a></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                    <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+                {% endfor %}                
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    
+                    <h4>Ruling Summary for {{courtcase.name}}</h4>
+                    <form method="POST" id="predictionForm" name="predictionForm">
+                    <table class="table table-bordered">    
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Prediction</th>
+                                <th>Notification History</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prediction in courtcase.userPredictions %}
+                            <tr>
+                                <td valign="top">{{prediction.user.fullname}}</td>
+                                <td valign="top">{{prediction}}</td>
+                                <td valign="top">
+                                    {% for notification in prediction.notifications %}
+                                        {{notification.created|date('d.M.Y')}} {{notification.email}}<br/>
+                                    {% endfor %}
+                                </td>
+                                <td valign="top">
+                                    <a title="Send Ruling Notification for this Prediction" href="{{ path('lexfutures_admin_jurisdiction_prediction_notify', {'id': prediction.id}) }}"><i class="fa fa-envelope action-icon icon-green"></i></a>&nbsp;&nbsp;
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{{path("lexfutures_admin_jurisdiction_case_ruling_notify", {'id': courtcase.id})}}" class="btn btn-primary">Send All Notification Emails</a>
+                    </form>
+                    
+                    
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+    $(document).ready(function() {
+        
+        
+
+    });    
+    </script>
+{% endblock javascripts %}    

@@ -1,0 +1,87 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - {% endblock %}
+{% block pagecontent %}
+<div id="page-wrapper">    
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 tpadding20">
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Cases
+                </div>
+                <div class="panel-body">
+                    <div id="morris-cases-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            
+        </div>
+        
+        <div class="col-lg-6 col-md-6 col-sm-12 tpadding20">
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Predictions
+                </div>
+                <div class="panel-body">
+                    <div id="morris-predictions-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            
+        </div>
+    </div>
+</div>
+    <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }}
+    
+    <!-- Morris Charts JavaScript -->
+    <script src="/bower_components/raphael/raphael-min.js"></script>
+    <script src="/bower_components/morrisjs/morris.min.js"></script>
+    <!--<script src="/js/morris-data.js"></script>-->
+    
+    <script>
+        $(function() {
+
+            Morris.Donut({
+                element: 'morris-cases-chart',
+                data: [{
+                    label: "Upcoming Cases",
+                    value: {{stats.upcomingCases|length}}
+                }, {
+                    label: "Recently Heard Cases",
+                    value: {{stats.recentlyHeardCases|length}}
+                }, {
+                    label: "Decided Cases",
+                    value: {{stats.decidedCases|length}}
+                }],
+                resize: true,
+                colors: [
+                    '#FF0000',
+                    '#008000',
+                    '#0000FF'
+                ],
+            });
+
+            Morris.Donut({
+                element: 'morris-predictions-chart',
+                data: [{
+                    label: "Predictions",
+                    value: {{stats.totalPredictions}}
+                }, {
+                    label: "Users",
+                    value: {{stats.totalUsers|length}}
+                }],
+                resize: true,
+                colors: [
+                    '#008000',
+                    '#0000FF'
+                ],
+            });
+
+        });
+
+    </script>
+{% endblock javascripts %}    

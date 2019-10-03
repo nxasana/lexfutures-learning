@@ -1,0 +1,80 @@
+<html>
+<body bgcolor="#ECECEC">
+
+<table align="center" width="700" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+<tr>
+  <td align="center" style="padding: 0;">
+    <a style="" href="http://www.lexfutures.com" title="LEXFutures"><img border="0" src="https://www.lexfutures.com/images/logo_large.png" alt="LEXFutures" width="400"></a>
+  </td>
+</tr>
+
+<tr>
+  <td align="center" style="line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; padding-top: 25px; padding-left: 40px; padding-right:40px;">
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: center;">
+        {{prediction.courtcase.name}} result. Your prediction was {{prediction}}.
+    </p>
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        Judgment has been handed down for {{prediction.courtcase.name}} and the application was {{ruling.calcPrediction('txtSimple')|capitalize}}. You 
+        have received {{awardedPoints}} points for your prediction. 
+    </p>
+    {#
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        You have a total of {{stats.points}} and {{stats.leaguePoints}} league points. 
+    </p>
+    #}
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        You have predicted {{stats.correctPredictions}} out of {{stats.totalPredictions}} case results correctly and {{stats.correctJudgePredictions}} 
+        out of {{stats.totalJudgePredictions}} individual judicial decisions correctly.
+    </p>
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        <strong>Total Points Ranking</strong>
+    </p>
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        You are in position {{newPointsTable.total.position}} out of {{newPointsTable.total.total}} competitors overall and in position 
+        {{newPointsTable.totalleague.position}} out of {{newPointsTable.totalleague.total}} competitors in the overall league.
+    </p>
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        <strong>{{prediction.user.category}} Points Ranking</strong>
+    </p>
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        You are in position {{newPointsTable.category.position}} out of {{newPointsTable.category.total}} competitors in the {{newPointsTable.category.name}} category
+        and in position {{newPointsTable.categoryleague.position}} out of {{newPointsTable.categoryleague.total}} competitors in the {{newPointsTable.category.name}} 
+        league category.
+    </p>
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        {#You have a total of {{stats.points}} and {{stats.leaguePoints}} league points. #}
+        Your predictions have scored {{stats.points}} points overall, of which {{stats.leaguePoints}} points have been scored on League Cases.
+    </p>
+    
+    
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        {#<a href='https://www.lexfutures.com/leaderboard/{{jurisdiction.id}}'>Take a look</a> at the Leader Board to see where you stand. #}
+        Take a look at the latest Leader Board <a href='https://www.lexfutures.com/leaderboard/{{jurisdiction.id}}'>here</a>.
+    </p>
+    
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        For further details please visit <a href='https://www.lexfutures.com'>LEXFutures</a> , <a href='https://twitter.com/LexFutures'>Twitter</a> or 
+        <a href='https://www.facebook.com/LEXFutures/'>Facebook</a>
+    </p>
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0; text-align: left;">
+        Click <a href='https://www.lexfutures.com/unsubscribe/key/{{key}}/u/{{prediction.user.id}}'>here</a> to Unsubscribe. 
+    </p>
+
+  </td>
+</tr>
+
+<tr>
+  <td align="left" style="line-height: 26px; font-family:'Helvetica','Arial',sans-serif; font-size: 12px;">
+    <p style="color:#4d4d4d; line-height: 20px; font-family:'Helvetica','Arial',sans-serif; font-size: 14px; margin: 0 0 15px 0;"><hr style="border:0; border-top:2px solid #c7c7c7;"></p>
+    
+</tr>
+</table>
+
+</body>
+</html>

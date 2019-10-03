@@ -1,0 +1,14 @@
+*[role="form"] {
+    max-width: 630px;
+    padding: 15px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+*[role="form"] h2 {
+    margin-left: 5em;
+    margin-bottom: 1em;
+}
+
+.form-control {padding-top: 6px; padding-bottom: 6px;}

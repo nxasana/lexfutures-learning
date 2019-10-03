@@ -1,0 +1,90 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<div class="container">
+    
+    <div class="row">
+        
+        <div class="col-xs-12 pall10 f-black text-center f-black">
+            <p>
+                {#
+                The LexFutures Court Prediction League is presented in <br/>partnership with UCT Law @ Work &amp; Juta Law.
+                #}
+                <br/>
+                <br/>
+            </p>
+        </div>
+        {#
+        <div class="col-xs-12 col-sm-6 tmargin20 f-black text-center">
+
+            <img src="/images/Juta-logo-small.png" class="img-responsive sponsor-logo">
+            
+            <p class="tmargin20"><a href="https://twitter.com/JutaLaw" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i> @JutaLaw</a></p>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 tmargin20 f-black text-center ">
+
+            <img src="/images/uctlogo.png" class="img-responsive sponsor-logo">
+            
+            <p class="tmargin20"><a href="https://twitter.com/UCT_Law_at_work" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i>@UCTLaw@Work</a></p>
+        </div>
+        #}
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12 hpadding20 tmargin20 text-center">
+            <div class="row">
+                <div class="col-xs-12">                    
+                    {% if app.user is defined and app.user is not null %}<h1>Welcome, {{name}}</h1>{% endif %}
+                    <h2>Select the Jurisdiction you want to see:</h2>
+                </div>
+            </div>            
+        </div>                    
+    </div>
+            
+    <div class="row">
+        <div class="col-xs-12 tmargin20">
+            <br/>
+            {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+            {% endfor %} 
+        </div>
+    </div>
+            
+    <div class="row">
+        {% for jurisdiction in jurisdictions %}
+        {% if jurisdiction.isActive %}
+        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
+            <a href="{{path('lexfutures_cases', {slug: jurisdiction.slug})}}" >
+                {#<img src="/images/{{jurisdiction.flag}}" class="img-responsive">#}
+                {% if jurisdiction.biopic is defined  and jurisdiction.biopic is not null %}
+                <img src="/images/{{jurisdiction.biopic.filename}}" class="img-responsive">
+                {% endif %}
+            </a>
+            <p style="color: #000;" class="text-center pall10">{{jurisdiction.anname}} {{jurisdiction.court}}</p>
+        </div>
+        {% else %}
+        
+        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
+            <div class="overlay text-center"><p><strong>Launching Soon</strong></p></div>
+            {% if jurisdiction.biopic is defined  and jurisdiction.biopic is not null %}
+            <img src="/images/{{jurisdiction.biopic.filename}}" class="img-responsive" >
+            {% endif %}
+            
+            <p style="color: #000;" class="text-center pall10">{{jurisdiction.anname}} {{jurisdiction.court}}</p>            
+        </div>    
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="row ">
+        <div class="col-xs-12 text-center tmargin70">
+            {#<img src="/images/Untitled-1.png" class="img-responsive center-block" alt="logo">#}
+            <img src="/images/header-logo.png" class="img-responsive center-block" alt="LexFutures Logo">
+            <br/>
+            A LexEikon company
+        </div>
+    </div>
+</div>
+{% endblock maincontent %}

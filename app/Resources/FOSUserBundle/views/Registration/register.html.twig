@@ -1,0 +1,15 @@
+{% extends "@FOSUser/layout.html.twig" %}
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="/css/registration.css">
+{% endblock stylesheets %}
+{% block fos_user_content %}
+<div class="header-zone">
+    <div class="container">
+        <h1>
+            Sign up to the LexFutures Fantasy Court Prediction Competition
+        </h1>
+    </div>
+</div>
+{% include "@FOSUser/Registration/register_content.html.twig" %}
+{% endblock fos_user_content %}

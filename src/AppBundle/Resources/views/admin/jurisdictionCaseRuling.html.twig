@@ -1,0 +1,129 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - Student Hub Admin{% endblock %}
+
+{% block stylesheets %}          
+    {{ parent() }}
+    <!-- DataTables CSS -->
+    <link href="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+    <style media="screen" type="text/css">
+.clickable {cursor: pointer;}
+
+</style>
+{% endblock %}
+
+{% block pagecontent %}    
+    <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{jurisdiction.name}} <a href="{{path('lexfutures_admin_jurisdiction_cases', {'id': jurisdiction.id})}}"><img src="/images/back-btn.jpg" style="height: 40px;"></a></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                    <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+                {% endfor %}                
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    
+                    <h4>Ruling for {{prediction.courtcase.name}}</h4>
+                    <form method="POST" id="predictionForm" name="predictionForm">
+                    <table class="table table-bordered">    
+                    {% for predictionJudge in prediction.predictionJudges %}
+                    {% if predictionJudge.judge.isRecused(prediction.courtcase.id) %}
+                    {% else %}
+                    <input type="hidden" name="justice_{{predictionJudge.judge.id}}" id="justice_{{predictionJudge.judge.id}}" value="{% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}{% if predictionJudge.appealUpheld %}1{% else %}0{% endif %}{% endif %}">
+                    <tr>
+                        <td>
+                            {{predictionJudge.judge.justiceTitle.name}} {{predictionJudge.judge.name}}
+                        </td>
+                        <td class="clickable upheld" id="upheld_{{predictionJudge.judge.id}}" style="width: 50px;">
+                            {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+                            {% if predictionJudge.appealUpheld %}
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                        <td class="clickable notupheld" id="notupheld_{{predictionJudge.judge.id}}" style="width: 50px;">
+                            {% if predictionJudge.appealUpheld is defined and predictionJudge.appealUpheld is not null %}
+                            {% if not predictionJudge.appealUpheld %}
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </table>
+                    <input type="submit" value="Predict"class="btn btn-lrg btn-primary">
+                    </form>
+                    
+                    
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }} 
+    <script>
+    $(document).ready(function() {
+        
+        $("body").on("click", ".upheld.clickable", function (e) {
+        
+            var ident = $(this).attr("id");
+            var id = partify(ident, "_", 1);
+
+            if ($("#upheld_"+id).html().trim() == '') {
+                
+                $("#justice_"+id).val('1');
+                $("#upheld_"+id).html('<i class="fa fa-check" aria-hidden="true"></i>');
+                $("#notupheld_"+id).html('');
+                
+            } else {
+                
+                $("#justice_"+id).val('');
+                $("#upheld_"+id).html('');
+                
+            }
+            
+            
+        });
+
+        $("body").on("click", ".notupheld.clickable", function (e) {
+
+            var ident = $(this).attr("id");
+            var id = partify(ident, "_", 1);
+
+            if ($("#notupheld_"+id).html().trim() == '') {
+                $("#justice_"+id).val('0');
+                $("#upheld_"+id).html('');
+                $("#notupheld_"+id).html('<i class="fa fa-times" aria-hidden="true"></i>');
+            } else {
+                $("#justice_"+id).val('');
+                $("#notupheld_"+id).html('');
+            }
+            
+        });
+
+    });
+    
+    function partify(string, seperator, index)
+    {
+
+        var parts = string.split(seperator);
+
+        return parts[index];
+
+    }
+    </script>
+{% endblock javascripts %}    

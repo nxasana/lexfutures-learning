@@ -1,0 +1,184 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - Student Hub Admin{% endblock %}
+
+{% block stylesheets %}          
+    {{ parent() }}
+    <!-- DataTables CSS -->
+    <link href="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block pagecontent %}    
+    <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Edit User <a href="{{path('lexfutures_admin_user_list')}}"><img src="/images/back-btn.jpg" style="height: 40px;"></a></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                    <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+                {% endfor %}                
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                                                
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                                <form action="" method="post" id="stdform" name="updateform">
+                                <div class="col-xs-8 col-md-4">
+                                    <div class="form-group">
+                                        {{form_errors(form)}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_row(form.firstName, {'label_attr': {'class': 'label label-default'}, 'attr': {'class': 'form-control'} })}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_row(form.lastName, {'label_attr': {'class': 'label label-default'}, 'attr': {'class': 'form-control'} })}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_row(form.email, {'label_attr': {'class': 'label label-default'}, 'attr': {'class': 'form-control'} })}}
+                                    </div>
+                                    {#
+                                    <div class="form-group">
+                                        {{ form_row(form.educationLevel, {'label_attr': {'class': 'label label-default'}, 'attr': {'class': 'form-control'} })}}
+                                    </div>
+                                    #}
+                                    <div class="form-group">
+                                        {{ form_row(form.occupation, {'label_attr': {'class': 'label label-default'}, 'attr': {'class': 'form-control'} })}}
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        {{ form_row(form.isFixture, {'label_attr': {'class': 'label label-default'}, 'attr': {'class': 'form-control'} })}}
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Update User" class="smbt-button btn btn-primary">&nbsp;&nbsp;&nbsp;
+                                        {% if user.enabled %}
+                                        <a href="{{path('lexfutures_admin_user_toggle_status', {'id': user.id})}}" class="btn btn-primary">Deactivate Account</a>
+                                        {% else %}
+                                        <a href="{{path('lexfutures_admin_user_toggle_status', {'id': user.id})}}" class="btn btn-primary">Activate Account</a>    
+                                        {% endif %}
+                                    </div>
+                                    {{ form_rest(form) }}
+                                </div> 
+                                </form>
+                                <div class="col-xs-4 col-md-8">
+                                    
+                                    {% if user is defined and user is not null %}
+                                    <hr>
+                                    <p>
+                                        {% for record in leaderboard.overall.aggregate %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Total Points: {{record.points}} pts <br/>
+                                        {% endif %}                                        
+                                        {% endfor %}                                       
+                                        
+                                        {% for record in leaderboard.overall.average %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Total League Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.lawProfessionals.aggregate %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Law Professionals Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.lawProfessionals.average %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Law Professionals League Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.students.aggregate %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Students Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.students.average %}                                            
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Students League Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.academics.aggregate %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Academics Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.academics.average %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Academics League Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.other.aggregate %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Open Points: {{record.points}} pts<br/>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                        {% for record in leaderboard.other.average %}
+                                        {% if record.id is defined and record.id is not null and record.id == user.id %}
+                                        Open League Points: {{record.points}} pts
+                                        {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        You have predicted {{leaderstats.casesPredictedCorrect}} out of {{leaderstats.totalEntries}} case results correctly and 
+                                        {{leaderstats.individualJudges}} out of {{leaderstats.totalJudges}} individual judicial decisions correctly.
+                                    </p>
+
+                                    <p>
+                                        <strong>Total Points Ranking</strong>
+                                    </p>
+                                    <p>
+                                        You are in position {{newPointsTable.total.position}} out of {{newPointsTable.total.total}} competitors overall and in position 
+                                        {{newPointsTable.totalleague.position}} out of {{newPointsTable.totalleague.total}} competitors in the overall league.
+                                    </p>
+                                    <p>
+                                        <strong>{{user.category}} Points Ranking</strong>
+                                    </p>
+                                    <p>
+                                        You are in position {{newPointsTable.category.position}} out of {{newPointsTable.category.total}} competitors in the {{newPointsTable.category.name}} category
+                                        and in position {{newPointsTable.categoryleague.position}} out of {{newPointsTable.categoryleague.total}} competitors in the {{newPointsTable.category.name}} category 
+                                        league category.
+                                    </p>
+
+                                    <hr>
+                                    {% endif %}
+            
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }}
+        
+    <script>
+    $(document).ready(function() {
+        
+    });
+    </script>
+{% endblock javascripts %}    

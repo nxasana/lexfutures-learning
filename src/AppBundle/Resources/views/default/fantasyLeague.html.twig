@@ -1,0 +1,45 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<div class="header-zone">
+    <div class="container">
+        <h1>
+            Welcome to the <strong>LexFutures African Apex Court Prediction League!</strong>
+        </h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 pall10 f-black f-black">
+            <p>
+                Join thousands of law students, attorneys, and other avid court followers in making advanced 
+                predictions about the outcomes and individual justice votes in cases before African courts of appeal.
+            </p>
+            <p>
+                Participation in the court prediction league is FREE and contenders can compete for over R100&nbsp;000 in
+                sponsored prizes. Register now in order to:
+            </p>
+            <ul class="reg">
+                <li>select different African jurisdictions to participate in</li>
+                <li>view individual Justice biographies and case histories before making predictions</li>
+                <li>predict case outcomes and individual Justice decisions</li>
+                <li>compete against the LexFutures crowd and machine-learning prediction algorithms</li>
+                <li>view realtime, aggregate predictions for case outcomes and up to the minute Leader Board status</li>
+            </ul>
+            <p>
+                The LexFutures <strong>African Apex Court Prediction League</strong> is run by LexFutures, a division of LexEikon Ltd, with 
+                the support of UCT Law @Work and <a href="http://www.juta.co.za" class="visible">Juta</a>.
+            </p>
+        </div>
+    </div>
+    
+    <div class="row padding20">
+        <div class="col-xs-12 text-center">
+            <a href="{{path('fos_user_registration_register')}}" class="btn btn-lg btn-primary" style="color:white !important;">Register</a>
+        </div>
+    </div>
+</div>
+
+<!-- /#header -->
+{% endblock maincontent %}
+{% block footernavigation %}    
+{% endblock footernavigation %}

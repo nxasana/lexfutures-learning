@@ -1,0 +1,10 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+    
+fos_user_security_login:
+    path:      /fantasy-league/login
+    defaults:  { _controller: FOSUserBundle:Security:login, _method: GET POST }

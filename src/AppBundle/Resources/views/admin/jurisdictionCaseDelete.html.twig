@@ -1,0 +1,240 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - Delete Case{% endblock %}
+
+{% block stylesheets %}          
+    {{ parent() }}
+    <!-- DataTables CSS -->
+    <link href="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="/sweetalert2-7.26.10/package/dist/sweetalert2.min.css">
+{% endblock %}
+
+{% block pagecontent %}    
+    <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{jurisdiction.name}} <a href="{{app.request.headers.get('referer')}}"><img src="/images/back-btn.jpg" style="height: 40px;"></a></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                    <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+                {% endfor %}                
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Delete Case {{courtcase.name}}                            
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    Total Predictions: {{courtcase.getUserPredictions|length}}
+                                </div>
+                                {% if courtcase.getUserPredictions|length > 0 %}
+                                <div class="col-xs-12">
+                                    
+                                    Use the form below to send an email notifcation to the below users.
+                                    <hr>
+                                    
+                                    {% for prediction in courtcase.getUserPredictions %}
+                                        {{prediction.user.firstName}} {{prediction.user.firstName}} - {{prediction.user.email}}<br/>
+                                    {% endfor %}
+                                    <hr>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <form method="post" name="deleteForm">
+                            {% if courtcase.getUserPredictions|length > 0 %}
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                  <div class="input-group">
+                                    <input type="email" class="form-control" placeholder="Preview Email..." id="preview-email" name="preview-email">
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-default" type="button" id="preview">Preview!</button>
+                                    </span>
+                                  </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                            </div><!-- /.row -->
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <textarea id="notification-email-content" name="notification-email-content" style="width: 100%; height: 200px; margin: 20px 0px;"></textarea>
+                                </div>
+                            </div>
+                            {% else %}
+
+                            {% endif %}
+                            <input type="button" value="Delete Case" id="delete" class="btn btn-primary"> {% if courtcase.getUserPredictions|length > 0 %}<input type="button" value="Delete Case & Notify" id="delete-and-notify" class="btn btn-primary">{% endif %}
+                            </form>
+                        </div>
+                        <!-- /.panel-heading -->
+                        
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            
+            
+            
+            
+            
+        </div>
+        <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/js/moment.js"></script>
+    <script type="text/javascript" src="/bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/sweetalert2-7.26.10/package/dist/sweetalert2.min.js"></script>
+    <script>
+    $(document).ready(function() {
+
+        $("#preview").click(function(){
+            //swal("Good job!", "Your comment was posted!", "success");
+            
+            var previewEmail = $("#preview-email").val();
+            
+            var previewContent = $("#notification-email-content").val();
+            
+            $.ajax({
+                type: "POST",
+                url: "/ajax/case/delete/preview",
+                data: "id="+{{courtcase.id}}+"&email="+previewEmail+"&content="+previewContent,
+                async: true, //make it asyncronous so that this is completely seamless to the user
+                success: function (returns) {
+                    var obj = jQuery.parseJSON(returns);
+                    if (obj.status == "OK") {
+                        swal("Good job!", obj.msg, "success");
+                    } else {
+                        swal("Warning!", obj.msg, "error")
+                    }
+
+                }
+            });
+        });
+        
+        $("#delete").click(function(){
+        
+            var notify = 'no';
+            
+            var previewContent = $("#notification-email-content").val();
+            
+            swal({
+                title: 'Are you sure?',
+                text: "The Case will be deleted! No notification emails will be sent!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                  if (result.value) {
+                   
+                   
+                   $.ajax({
+                        type: "POST",
+                        url: "/ajax/case/delete",
+                        data: "id="+{{courtcase.id}}+"&notify="+notify+"&content="+previewContent,
+                        async: true, //make it asyncronous so that this is completely seamless to the user
+                        success: function (returns) {
+                            var obj = jQuery.parseJSON(returns);
+                            if (obj.status == "OK") {
+                                swal("Good job!", obj.msg, "success");
+                            } else {
+                                swal("Warning!", obj.msg, "error")
+                            }
+
+                        }
+                    });
+                   
+               }
+              });
+            /*
+            var notify = false;
+            
+            var previewContent = $("#notification-email-content").val();
+            
+            swal({
+                title: 'Are you sure?',
+                text: "The Case will be deleted! No notification emails will be sent!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.value) {
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajax/case/delete",
+                        data: "id="+{{courtcase.id}}+"&email="+previewEmail+"&content="+previewContent,
+                        async: true, //make it asyncronous so that this is completely seamless to the user
+                        success: function (returns) {
+                            var obj = jQuery.parseJSON(returns);
+                            if (obj.status == "OK") {
+                                swal("Good job!", obj.msg, "success");
+                            } else {
+                                swal("Warning!", obj.msg, "error")
+                            }
+
+                        }
+                    });
+                    
+                }
+              });
+            */
+        });
+
+        $('#delete-and-notify').click(function(){
+            
+            var notify = 'yes';
+            
+            var previewContent = $("#notification-email-content").val();
+            
+            swal({
+                title: 'Are you sure?',
+                text: "The Case will be deleted! Notification emails will be sent to all participants that have entered a prediction!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                if (result.value) {
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajax/case/delete",
+                        data: "id="+{{courtcase.id}}+"&notify="+notify+"&content="+previewContent,
+                        async: true, //make it asyncronous so that this is completely seamless to the user
+                        success: function (returns) {
+                            var obj = jQuery.parseJSON(returns);
+                            if (obj.status == "OK") {
+                                swal("Good job!", obj.msg, "success");
+                            } else {
+                                swal("Warning!", obj.msg, "error")
+                            }
+
+                        }
+                    });
+                    
+                }
+              });
+            
+        });
+    });
+    </script>
+{% endblock javascripts %}    

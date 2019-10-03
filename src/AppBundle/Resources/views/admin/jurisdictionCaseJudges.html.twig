@@ -1,0 +1,89 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - Student Hub Admin{% endblock %}
+
+{% block stylesheets %}          
+    {{ parent() }}
+    <!-- DataTables CSS -->
+    <link href="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.min.css" />
+{% endblock %}
+
+{% block pagecontent %}    
+    <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{jurisdiction.name}} <a href="{{path('lexfutures_admin_jurisdiction_cases', {'id': jurisdiction.id})}}"><img src="/images/back-btn.jpg" style="height: 40px;"></a></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                    <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+                {% endfor %}                
+                </div>
+            </div>
+                        
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Judges for this case &nbsp; &nbsp;<a href="{{ path('lexfutures_admin_jurisdiction_case_judge_add', {'slug': courtcase.slug}) }}"><i class="fa fa-plus-square icon-green" aria-hidden="true"></i> Add Judge(s) to this case</a>                     
+                        </div>
+                        
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th>Judge</th> 
+                                            <th>Status</th> 
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in courtcase.judges %}
+                                        <tr class="odd">
+                                            <td>{{ record.name }}</td>
+                                            <td>{% if record.isRecused(courtcase.id) %}Recused{% else %}Active{% endif %}</td>                                            
+                                            <td class="center">   
+                                                {% if record.isRecused(courtcase.id) %}
+                                                <a title="Undo Recusal" href="{{ path('lexfutures_admin_jurisdiction_case_judge_recuse', {'slug': courtcase.slug, 'judgeid': record.id}) }}"><i class="fa fa-trash action-icon icon-green"></i></a>&nbsp;&nbsp;
+                                                {% else %}
+                                                <a title="Recuse Judge" href="{{ path('lexfutures_admin_jurisdiction_case_judge_recuse', {'slug': courtcase.slug, 'judgeid': record.id}) }}"><i class="fa fa-trash action-icon icon-red"></i></a>&nbsp;&nbsp;
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/js/moment.js"></script>
+    <script type="text/javascript" src="/bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js"></script>    
+    <script>
+    $(document).ready(function() {
+
+        $('.datetimepicker').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm'
+        });
+
+    });
+    </script>
+{% endblock javascripts %}    

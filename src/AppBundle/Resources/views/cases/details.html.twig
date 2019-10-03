@@ -1,0 +1,40 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<link rel="stylesheet" href="/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.min.css">
+<script src="/js/jquery.1.10.2.min.js"></script>
+<div class="container">
+    {# <div class="row">
+        <div class="col-xs-12 col-md-9 text-center tmargin20">
+            <img src="/images/Juta-logo-small.png" class="img-responsive" style="margin: 0 auto; width: 130px;">
+            <h2 style="margin-bottom: 6px !important;">{{jurisdiction.anname}} Court</h2>
+            <a href="{{path('lexfutures_leaderboard', {'slug': jurisdiction.slug})}}"><small>leader board</small></a>
+        </div>
+        <div class="col-xs-12 col-md-3 text-center">
+            <img src="/images/400px-uct_alt_ntp.png" class="img-responsive">
+            The LexFutures Court Prediction League is presented in partnership with UCT Law @ Work.
+        </div>
+    </div> #}
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>{{case.name}} details</h4>
+            <hr>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12 f-black">
+            {% for record in case.notes %}
+            <p>
+                {{ record.note }}
+            </p>    
+            {% endfor %}
+        </div>
+        <div class="col-xs-12">
+            <br/>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+{% endblock maincontent %}

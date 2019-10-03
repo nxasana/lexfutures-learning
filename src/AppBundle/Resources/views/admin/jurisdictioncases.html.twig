@@ -1,0 +1,117 @@
+{% extends 'AppBundle::adminbase.html.twig' %}
+{% block title %}Dashboard - Cases{% endblock %}
+
+{% block stylesheets %}          
+    {{ parent() }}
+    <!-- DataTables CSS -->
+    <link href="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+{% endblock %}
+
+{% block pagecontent %}    
+    <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{jurisdiction.anname}} cases <a href="{{path('lexfutures_admin_jurisdiction_list')}}"><img src="/images/back-btn.jpg" style="height: 40px;"></a></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                {% for flashMessage in app.session.flashbag.get('successmsg') %}
+                    <div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scgreen"></i> Success!</strong> {{ flashMessage }}</div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('errormsg') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><strong><i class="fa fa-check scred"></i> Error!</strong> {{ flashMessage }}</div>
+                {% endfor %}                
+                </div>
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Table of Court Cases
+                            <span style="float: right;"><a href="{{ path('lexfutures_admin_jurisdiction_case_add', {'id': jurisdiction.id}) }}"><i class="fa fa-bank"></i> Add a new Court Case</a></span>
+                        </div>
+                        
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th>Date added</th> 
+                                            <th>Name</th>
+                                            <th>Season</th>
+                                            <th>Status</th> 
+                                            <th>Hearing Date</th>
+                                            <th>Outcome</th>
+                                            <th>Predictions</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in cases %}
+                                        <tr class="odd">
+                                            <td>{{ record.created|date('d M Y') }}</td>
+                                            <td>{{ record.name }}</td>
+                                            <td>{% if record.season is defined and record.season is not null %}{{record.season}}{% endif %}</td>
+                                            <td>
+                                                {{ record.publicationStatusToString }}
+                                            </td>   
+                                            <td>{{ record.scheduledDate|date('d M Y') }}</td>
+                                            <td>
+                                                {% if record.ruling is defined and record.ruling is not null %}
+                                                {{record.ruling}}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ path('lexfutures_admin_jurisdiction_case_predictions', {'slug': record.slug}) }}">{{record.userPredictions|length}}</a>
+                                            </td>
+                                            <td class="center" width="220"> 
+                                                {% if record.publicationStatusToString != "deleted" %}
+                                                <a title="Edit This Case" href="{{ path('lexfutures_admin_jurisdiction_case_edit', {'id': jurisdiction.id, 'caseid': record.id}) }}"><i class="fa fa-pencil action-icon icon-yellow"></i></a>&nbsp;&nbsp;
+                                                {% if record.isPaused is not null and record.isPaused %}
+                                                <a title="Pause User Predictions For This Case" href="{{ path('lexfutures_admin_jurisdiction_case_pause_toggle', {'id': jurisdiction.id, 'caseid': record.id, 'action': 'unpause'}) }}"><i class="fa fa-play action-icon icon-orange"></i></a>&nbsp;&nbsp;
+                                                {% else %}
+                                                <a title="Pause User Predictions For This Case" href="{{ path('lexfutures_admin_jurisdiction_case_pause_toggle', {'id': jurisdiction.id, 'caseid': record.id, 'action': 'pause'}) }}"><i class="fa fa-pause action-icon icon-orange"></i></a>&nbsp;&nbsp;
+                                                {% endif %}
+                                                <a title="List Judges" href="{{ path('lexfutures_admin_jurisdiction_case_judges', {'slug': record.slug}) }}"><i class="fa fa-user action-icon icon-green"></i></a>&nbsp;&nbsp;
+                                                <a title="Ruling For This Case" href="{{ path('lexfutures_admin_jurisdiction_case_ruling', {'id': record.id}) }}"><i class="fa fa-gavel action-icon icon-blue"></i></a>&nbsp;&nbsp;
+                                                <a title="Notes For This Case" href="{{ path('lexfutures_admin_jurisdiction_case_notes', {'slug': record.slug}) }}"><i class="fa fa-file-text-o action-icon icon-green"></i></a>&nbsp;&nbsp;
+                                                <a title="Delete This Case" href="{{ path('lexfutures_admin_jurisdiction_case_delete', {'slug': record.slug}) }}"><i class="fa fa-trash action-icon icon-red" aria-hidden="true"></i></a>&nbsp;&nbsp;
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+{% endblock pagecontent %}
+{% block javascripts %}
+    {{ parent() }}
+    
+    <!-- DataTables JavaScript -->
+    <script src="/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true,
+            pageLength: 50
+        });
+    });
+    </script>
+{% endblock javascripts %}    

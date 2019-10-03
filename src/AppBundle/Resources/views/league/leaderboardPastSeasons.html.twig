@@ -1,0 +1,40 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<div class="header-zone">
+    <div class="container">
+        <div class="context">
+            Prediction League Leaderboard
+        </div>
+        <h1>
+            {{jurisdiction.anname}} {{jurisdiction.court}}
+        </h1>
+        <a href="{{path("lexfutures_leaderboard", {'slug': jurisdiction.slug})}}">View current leaderboard</a>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 f-black">
+            <h3>Available Seasons</h3>
+            <hr>
+            
+            {% for season in pastSeasons %}
+            <a href="{{path("lexfutures_leaderboard", {'slug': season.jurisdiction.slug, 'id': season.id})}}">{{season.name}}</a><br/>   
+            {% endfor %}
+            
+        </div>
+        <div class="col-xs-12 f-black">
+            <br/>
+            <br/>
+        </div>
+    </div>
+    
+</div>
+{% endblock maincontent %}

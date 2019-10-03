@@ -1,0 +1,54 @@
+{% extends 'AppBundle::frontbase.html.twig' %}
+{% block maincontent %}
+<!-- header start -->
+<header id="header" class="header-wrapper home-parallax home-fade">
+    <div class="header-overlay"></div>
+    <div class="header-wrapper-inner">
+        <div class="container">
+            {% if msg is defined and msg is not null %}
+            {% if msgtype == "err" %}
+            <div class="row">
+                <div class="col-xs-12 alert-danger" >
+                    <h2 style='margin: 0.7em 0 0.7em !important;'>{{msg}}</h2>
+                </div>
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-xs-12 alert-success" >
+                    <h2 style='margin: 0.7em 0 0.7em !important;'>{{msg}}</h2>
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
+            <div class="row">
+                <div class="col-xs-12">
+                    
+                    <img src="/images/logo_large.png" class="img-responsive">
+                    
+                    <p style="font-size: 1.8em;">
+                        {# LexFutures provides in-depth research and consulting services relating to future legal events. #}
+                        LexFutures provides client-customized legal data analytics services.
+                    </p>
+                    
+                </div>
+            </div>
+            
+            {#
+            <div class="welcome-speech">
+                <h1>Welcome to our avada agency</h1>
+                <p>Everything you need to have in order to build a stunning website</p>
+                
+                <a href="#" class="btn btn-white">
+                    Our Works
+                </a>
+                
+            </div><!-- /.intro -->
+            #}
+        </div><!-- /.container -->
+
+    </div><!-- /.header-wrapper-inner -->
+</header>
+<!-- /#header -->
+{% endblock maincontent %}
+{% block footernavigation %}    
+{% endblock footernavigation %}
